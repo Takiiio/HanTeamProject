@@ -30,7 +30,7 @@ class MicrophoneStream(object):
         )
 
         self.closed = False
-        print('Starting...')
+        print('Starting..')
         return self
 
     # 오디오 스트림을 닫고 자원 정리
@@ -93,19 +93,20 @@ def listen_print_loop(responses):
             num_chars_printed = len(transcript)
             # 현재까지 출력된 문자 수를 저장(덮어쓰기)
 
+        # 데이터 프레임 생성하여 CSV 파일 저장
         else:
-            words = transcript.split()
+            words = transcript.split() # 띄어쓰기로 구분하여 단어 저장
             df = pd.DataFrame([words])
 
-        #데이터 프레임 생성하여 CSV 파일 저장
             if not os.path.exists("C:/Temp/result/stt_result.csv"):
                 df.to_csv("C:/Temp/result/stt_result.csv", index = False, mode = 'w', encoding= 'utf-8-sig')
+            # 누적 저장
             else:
-                df.to_csv("C:/Temp/result/stt_result.csv", index = False, mode= 'a', encoding= 'utf-8-sig')
-
+                df.to_csv("C:/Temp/result/stt_result.csv", index = False, mode= 'a', encoding= 'utf-8-sig', header = False)
+            #출력 결과 미리 보기
             print(df)
 
-            if re.search(r'\b(그려|줘)\b', transcript, re.I):
+            if re.search(r'\b(그려 줘)\b', transcript, re.I): #'그려 줘'를 인식하면 자동으로 종료
                 print('Exiting..')
                 break
 
